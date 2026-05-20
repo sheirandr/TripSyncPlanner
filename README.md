@@ -1,2 +1,403 @@
 # TripSyncPlanner
 End the group chat indecision. Let everyone have a say with interactive voting polls and visual results.
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TripSync</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .tab-active { border-bottom: 3px solid #3b5bdb; color: #3b5bdb; font-weight: 700; }
+        .tab-btn { transition: all 0.15s; cursor: pointer; }
+        .tab-btn:hover { color: #3b5bdb; }
+        .reel-card { aspect-ratio: 9/16; max-height: 280px; }
+    </style>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ </head>
+ <body data-template-id="__page-root" class="min-h-screen w-full" style="background: rgb(248, 250, 252);">
+  <!-- Header -->
+  <header class="w-full px-6 py-4 flex items-center justify-between max-w-7xl mx-auto">
+   <h1 data-template-id="logo" class="canva-text text-2xl font-bold" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 24px;">TripSync</h1>
+   <div class="flex items-center gap-4">
+    <a href="https://www.tripsync.planner.com" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-blue-500"> <i data-lucide="help-circle" style="width:20px;height:20px"></i> </a> <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer"> <button data-template-id="nav-cta" class="canva-button px-5 py-2 rounded-full font-medium" style="background: rgb(59, 91, 219); color: rgb(255, 255, 255); font-weight: 500; font-style: normal; font-size: 16px;">Learn More</button> </a>
+   </div>
+  </header><!-- Hero -->
+  <section class="max-w-7xl mx-auto px-6 py-8 grid md:grid-cols-2 gap-8 items-center">
+   <div>
+    <h2 data-template-id="hero-headline" class="canva-text font-bold leading-tight" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 24px;">Group Travel, Perfectly Synced.</h2>
+    <p data-template-id="hero-sub" class="canva-text mt-4" style="color: rgb(71, 85, 105); font-weight: 400; font-style: normal; font-size: 16px;">Plan group trips effortlessly with real-time voting, automated budget splitting, and curated destinations all in one seamless platform. We take the complexity out of group travel so you can focus on making memories.</p>
+    <p data-template-id="hero-contact" class="canva-text mt-3 text-sm" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">📸 @tripsync.planner</p>
+   </div>
+   <div class="rounded-2xl overflow-hidden shadow-xl">
+    <img data-template-id="hero-img" loading="lazy" class="canva-image w-full h-64 object-cover" src="https://images.pexels.com/photos/12253960/pexels-photo-12253960.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="Group of friends enjoying a happy day on a beach">
+   </div>
+  </section><!-- Tabs -->
+  <nav class="max-w-7xl mx-auto px-6 border-b border-gray-200 flex gap-1 overflow-x-auto">
+   <button class="tab-btn tab-active px-4 py-3 text-sm whitespace-nowrap" data-tab="trips">My Trips</button> <button class="tab-btn px-4 py-3 text-sm whitespace-nowrap" data-tab="voting">Group Voting</button> <button class="tab-btn px-4 py-3 text-sm whitespace-nowrap" data-tab="budget">Budget Splitter</button> <button class="tab-btn px-4 py-3 text-sm whitespace-nowrap" data-tab="marketplace">Marketplace (OTA)</button> <button class="tab-btn px-4 py-3 text-sm whitespace-nowrap" data-tab="reels">Trip Reels</button>
+  </nav>
+  <main class="max-w-7xl mx-auto px-6 py-8">
+   <!-- MY TRIPS -->
+   <section id="tab-trips">
+    <div class="flex items-center justify-between mb-6">
+     <h3 data-template-id="trips-title" class="canva-text font-bold" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 20px;">My Trips</h3><button id="add-trip-btn" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-indigo-700"> <i data-lucide="plus" style="width:16px;height:16px"></i> Add Trip </button>
+    </div>
+    <div id="trip-form" class="hidden mb-6 p-4 bg-white rounded-xl shadow border">
+     <label class="block text-sm font-medium text-gray-700 mb-1" for="trip-name">Trip Name</label> <input id="trip-name" type="text" class="w-full border rounded-lg px-3 py-2 mb-3 text-sm" placeholder="e.g. Bali Escape 2026"> <label class="block text-sm font-medium text-gray-700 mb-1" for="trip-desc">Description</label> <input id="trip-desc" type="text" class="w-full border rounded-lg px-3 py-2 mb-3 text-sm" placeholder="e.g. Group planning, destination ideas">
+     <div class="flex gap-2">
+      <button id="save-trip" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium">Save</button> <button id="cancel-trip" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Cancel</button>
+     </div>
+    </div>
+    <div id="trips-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    <p id="trips-empty" class="text-gray-400 text-center py-8 text-sm">No trips yet. Add one above!</p>
+   </section><!-- GROUP VOTING -->
+   <section id="tab-voting" class="hidden">
+    <div class="flex items-center justify-between mb-6">
+     <h3 data-template-id="voting-title" class="canva-text font-bold" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 20px;">Group Voting</h3><button id="add-vote-btn" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-emerald-700"> <i data-lucide="plus" style="width:16px;height:16px"></i> Add Activity </button>
+    </div>
+    <div id="vote-form" class="hidden mb-6 p-4 bg-white rounded-xl shadow border">
+     <label class="block text-sm font-medium text-gray-700 mb-1" for="vote-title">Activity Name</label> <input id="vote-title" type="text" class="w-full border rounded-lg px-3 py-2 mb-3 text-sm" placeholder="e.g. Nusa Penida Day Trip"> <label class="block text-sm font-medium text-gray-700 mb-1" for="vote-desc">Description</label> <input id="vote-desc" type="text" class="w-full border rounded-lg px-3 py-2 mb-3 text-sm" placeholder="e.g. Snorkeling + cliff views">
+     <div class="flex gap-2">
+      <button id="save-vote" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium">Save</button> <button id="cancel-vote" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Cancel</button>
+     </div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+     <div>
+      <div id="votes-list" class="space-y-3"></div>
+      <p id="votes-empty" class="text-gray-400 text-center py-8 text-sm">No activities yet. Add one to vote on!</p>
+     </div>
+     <div id="chart-container" class="hidden">
+      <h4 class="font-bold text-sm text-gray-700 mb-3">Voting Results</h4>
+      <canvas id="pie-chart" width="280" height="280"></canvas>
+      <div id="chart-legend" class="mt-3 text-sm space-y-1"></div>
+     </div>
+    </div>
+   </section><!-- BUDGET SPLITTER -->
+   <section id="tab-budget" class="hidden">
+    <div class="flex items-center justify-between mb-6">
+     <h3 data-template-id="budget-title" class="canva-text font-bold" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 20px;">Budget Splitter</h3><button id="add-expense-btn" class="bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-amber-700"> <i data-lucide="plus" style="width:16px;height:16px"></i> Add Expense </button>
+    </div>
+    <div id="expense-form" class="hidden mb-6 p-4 bg-white rounded-xl shadow border">
+     <div class="grid sm:grid-cols-2 gap-3 mb-3">
+      <div><label class="block text-sm font-medium text-gray-700 mb-1" for="exp-title">Expense</label><input id="exp-title" type="text" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="e.g. Hotel">
+      </div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1" for="exp-amount">Amount (Rp)</label><input id="exp-amount" type="number" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="e.g. 2000000">
+      </div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1" for="exp-paid">Paid By</label><input id="exp-paid" type="text" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="e.g. Andi">
+      </div>
+      <div><label class="block text-sm font-medium text-gray-700 mb-1" for="exp-split">Split With (comma separated)</label><input id="exp-split" type="text" class="w-full border rounded-lg px-3 py-2 text-sm" placeholder="e.g. Andi, Budi, Citra">
+      </div>
+     </div>
+     <div class="flex gap-2">
+      <button id="save-expense" class="bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-medium">Save</button> <button id="cancel-expense" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">Cancel</button>
+     </div>
+    </div>
+    <div id="budget-summary" class="hidden mb-6 p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+     <h4 class="font-bold text-sm text-indigo-900 mb-2">Summary - Who Owes Whom</h4>
+     <div id="summary-content" class="text-sm text-gray-700 space-y-1"></div>
+    </div>
+    <div id="expenses-list" class="space-y-3"></div>
+    <p id="expenses-empty" class="text-gray-400 text-center py-8 text-sm">No expenses yet. Add one to split!</p>
+   </section><!-- MARKETPLACE (OTA) -->
+   <section id="tab-marketplace" class="hidden">
+    <h3 data-template-id="market-title" class="canva-text font-bold mb-6" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 20px;">OTA Marketplace &amp; Destinations</h3>
+    <h4 data-template-id="market-tickets-label" class="canva-text font-semibold mb-3" style="color: rgb(30, 41, 59); font-weight: 600; font-style: normal; font-size: 16px;">🎟️ Tiket &amp; Wahana</h4>
+    <div class="grid sm:grid-cols-3 gap-4 mb-8">
+     <div class="rounded-xl overflow-hidden shadow bg-white">
+      <img data-template-id="ticket-1-img" loading="lazy" class="canva-image w-full h-36 object-cover" src="https://images.pexels.com/photos/18403915/pexels-photo-18403915.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Colorful amusement park ride">
+      <div class="p-3">
+       <h5 data-template-id="ticket-1-name" class="canva-text font-bold text-sm" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 13px;">Jungle Land Adventure</h5>
+       <p data-template-id="ticket-1-price" class="canva-text text-xs mt-1" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">Rp150.000/pax</p>
+      </div>
+     </div>
+     <div class="rounded-xl overflow-hidden shadow bg-white">
+      <img data-template-id="ticket-2-img" loading="lazy" class="canva-image w-full h-36 object-cover" src="https://images.pexels.com/photos/34791614/pexels-photo-34791614.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Sunset over Tanah Lot Temple in Bali">
+      <div class="p-3">
+       <h5 data-template-id="ticket-2-name" class="canva-text font-bold text-sm" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 13px;">Tanah Lot Day Pass</h5>
+       <p data-template-id="ticket-2-price" class="canva-text text-xs mt-1" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">Rp60.000/pax</p>
+      </div>
+     </div>
+     <div class="rounded-xl overflow-hidden shadow bg-white">
+      <img data-template-id="ticket-3-img" loading="lazy" class="canva-image w-full h-36 object-cover" src="https://images.pexels.com/photos/29120352/pexels-photo-29120352.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Dramatic cliffs over azure ocean at Nusa Penida">
+      <div class="p-3">
+       <h5 data-template-id="ticket-3-name" class="canva-text font-bold text-sm" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 13px;">Nusa Penida Boat Tour</h5>
+       <p data-template-id="ticket-3-price" class="canva-text text-xs mt-1" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">Rp350.000/pax</p>
+      </div>
+     </div>
+    </div>
+    <h4 data-template-id="market-resto-label" class="canva-text font-semibold mb-3" style="color: rgb(30, 41, 59); font-weight: 600; font-style: normal; font-size: 16px;">🍽️ Restoran &amp; Voucher</h4>
+    <div class="grid sm:grid-cols-3 gap-4 mb-8">
+     <div class="rounded-xl overflow-hidden shadow bg-white">
+      <img data-template-id="resto-1-img" loading="lazy" class="canva-image w-full h-36 object-cover" src="https://images.pexels.com/photos/37095601/pexels-photo-37095601.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Traditional Indonesian dishes on a wooden table">
+      <div class="p-3">
+       <h5 data-template-id="resto-1-name" class="canva-text font-bold text-sm" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 13px;">Warung Bali Authentic</h5>
+       <p data-template-id="resto-1-desc" class="canva-text text-xs mt-1" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">Voucher makan Rp100.000 – Reservasi tersedia</p>
+      </div>
+     </div>
+     <div class="rounded-xl overflow-hidden shadow bg-white">
+      <img data-template-id="resto-2-img" loading="lazy" class="canva-image w-full h-36 object-cover" src="https://images.pexels.com/photos/37052500/pexels-photo-37052500.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Indonesian dishes including satay and noodles">
+      <div class="p-3">
+       <h5 data-template-id="resto-2-name" class="canva-text font-bold text-sm" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 13px;">Fins Beach Club Resto</h5>
+       <p data-template-id="resto-2-desc" class="canva-text text-xs mt-1" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">Beachfront dining – Reservasi grup tersedia</p>
+      </div>
+     </div>
+     <div class="rounded-xl overflow-hidden shadow bg-white">
+      <img data-template-id="resto-3-img" loading="lazy" class="canva-image w-full h-36 object-cover" src="https://images.pexels.com/photos/37065017/pexels-photo-37065017.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Traditional Asian dishes spread">
+      <div class="p-3">
+       <h5 data-template-id="resto-3-name" class="canva-text font-bold text-sm" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 13px;">Ubud Garden Cafe</h5>
+       <p data-template-id="resto-3-desc" class="canva-text text-xs mt-1" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">Organic menu – Voucher Rp75.000</p>
+      </div>
+     </div>
+    </div>
+    <h4 data-template-id="market-accom-label" class="canva-text font-semibold mb-3" style="color: rgb(30, 41, 59); font-weight: 600; font-style: normal; font-size: 16px;">🏨 Akomodasi</h4>
+    <div class="grid sm:grid-cols-3 gap-4">
+     <div class="rounded-xl overflow-hidden shadow bg-white">
+      <img data-template-id="accom-1-img" loading="lazy" class="canva-image w-full h-36 object-cover" src="https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Luxurious tropical resort with swimming pool">
+      <div class="p-3">
+       <h5 data-template-id="accom-1-name" class="canva-text font-bold text-sm" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 13px;">Padma Resort Ubud</h5>
+       <p data-template-id="accom-1-price" class="canva-text text-xs mt-1" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">Rp2.800.000/night</p>
+      </div>
+     </div>
+     <div class="rounded-xl overflow-hidden shadow bg-white">
+      <img data-template-id="accom-2-img" loading="lazy" class="canva-image w-full h-36 object-cover" src="https://images.pexels.com/photos/34790496/pexels-photo-34790496.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Villa infinity pool at sunset in Bali">
+      <div class="p-3">
+       <h5 data-template-id="accom-2-name" class="canva-text font-bold text-sm" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 13px;">Villa Seminyak Estate</h5>
+       <p data-template-id="accom-2-price" class="canva-text text-xs mt-1" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">Rp1.500.000/night</p>
+      </div>
+     </div>
+     <div class="rounded-xl overflow-hidden shadow bg-white">
+      <img data-template-id="accom-3-img" loading="lazy" class="canva-image w-full h-36 object-cover" src="https://images.pexels.com/photos/36956260/pexels-photo-36956260.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Tranquil tropical villa with pool in Bali">
+      <div class="p-3">
+       <h5 data-template-id="accom-3-name" class="canva-text font-bold text-sm" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 13px;">Canggu Beach House</h5>
+       <p data-template-id="accom-3-price" class="canva-text text-xs mt-1" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">Rp900.000/night</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- TRIP REELS -->
+   <section id="tab-reels" class="hidden">
+    <h3 data-template-id="reels-title" class="canva-text font-bold mb-6" style="color: rgb(30, 41, 59); font-weight: 700; font-style: normal; font-size: 20px;">🎬 Trip Reels</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+     <div class="reel-card rounded-xl overflow-hidden shadow-lg relative">
+      <img data-template-id="reel-1-img" loading="lazy" class="canva-image w-full h-full object-cover" src="https://images.pexels.com/photos/2404370/pexels-photo-2404370.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=400" alt="Person snorkeling among vibrant marine life">
+      <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+       <p data-template-id="reel-1-title" class="canva-text text-xs font-bold" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Snorkeling di Nusa Penida 🐠</p>
+      </div>
+     </div>
+     <div class="reel-card rounded-xl overflow-hidden shadow-lg relative">
+      <img data-template-id="reel-2-img" loading="lazy" class="canva-image w-full h-full object-cover" src="https://images.pexels.com/photos/6324292/pexels-photo-6324292.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=400" alt="Happy couple of hikers taking selfie against mountains">
+      <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+       <p data-template-id="reel-2-title" class="canva-text text-xs font-bold" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Hiking Bareng Bestie 🏔️</p>
+      </div>
+     </div>
+     <div class="reel-card rounded-xl overflow-hidden shadow-lg relative">
+      <img data-template-id="reel-3-img" loading="lazy" class="canva-image w-full h-full object-cover" src="https://images.pexels.com/photos/1430672/pexels-photo-1430672.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=400" alt="Two people kayaking in clear turquoise waters">
+      <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+       <p data-template-id="reel-3-title" class="canva-text text-xs font-bold" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Kayaking Sunset Tour 🌅</p>
+      </div>
+     </div>
+     <div class="reel-card rounded-xl overflow-hidden shadow-lg relative">
+      <img data-template-id="reel-4-img" loading="lazy" class="canva-image w-full h-full object-cover" src="https://images.pexels.com/photos/15994341/pexels-photo-15994341.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=400" alt="Lush terraced rice fields surrounded by palm trees">
+      <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+       <p data-template-id="reel-4-title" class="canva-text text-xs font-bold" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Ubud Rice Terrace Walk 🌾</p>
+      </div>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer data-template-id="footer-bg" class="canva-footer w-full py-8 px-6 text-center" style="background: rgb(30, 41, 59);">
+   <p data-template-id="footer-text" class="canva-text text-sm" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">© 2026 TripSync. All rights reserved. | @tripsync.id</p>
+  </footer>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+        lucide.createIcons();
+
+        // Tab switching
+        const tabs = document.querySelectorAll('[data-tab]');
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('tab-active'));
+                btn.classList.add('tab-active');
+                document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+                document.getElementById('tab-' + btn.dataset.tab).classList.remove('hidden');
+            });
+        });
+
+        let allData = [];
+        function getByType(type) { return allData.filter(d => d.type === type); }
+
+        // PIE CHART
+        const COLORS = ['#3b5bdb','#12b886','#f59f00','#e64980','#7950f2','#20c997','#fd7e14','#845ef7'];
+        function drawPieChart() {
+            const votes = getByType('vote');
+            const container = document.getElementById('chart-container');
+            if (votes.length === 0) { container.classList.add('hidden'); return; }
+            container.classList.remove('hidden');
+            const canvas = document.getElementById('pie-chart');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, 280, 280);
+            const total = votes.reduce((s, v) => s + (v.votes || 0), 0);
+            if (total === 0) { ctx.fillStyle='#e5e7eb'; ctx.beginPath(); ctx.arc(140,140,120,0,Math.PI*2); ctx.fill(); return; }
+            let start = -Math.PI/2;
+            const legend = document.getElementById('chart-legend');
+            legend.innerHTML = '';
+            votes.forEach((v, i) => {
+                const slice = ((v.votes||0)/total)*Math.PI*2;
+                ctx.beginPath(); ctx.moveTo(140,140); ctx.arc(140,140,120,start,start+slice); ctx.closePath();
+                ctx.fillStyle = COLORS[i % COLORS.length]; ctx.fill();
+                start += slice;
+                legend.innerHTML += `<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full inline-block" style="background:${COLORS[i%COLORS.length]}"></span><span>${esc(v.title)} (${v.votes||0})</span></div>`;
+            });
+        }
+
+        function renderTrips() {
+            const list = document.getElementById('trips-list');
+            const empty = document.getElementById('trips-empty');
+            const trips = getByType('trip');
+            empty.classList.toggle('hidden', trips.length > 0);
+            const existing = new Map([...list.children].map(el => [el.dataset.id, el]));
+            trips.forEach(trip => {
+                if (existing.has(trip.__backendId)) {
+                    const el = existing.get(trip.__backendId);
+                    el.querySelector('.trip-title').textContent = trip.title;
+                    el.querySelector('.trip-desc').textContent = trip.description || '';
+                    existing.delete(trip.__backendId);
+                } else {
+                    const el = document.createElement('div');
+                    el.dataset.id = trip.__backendId;
+                    el.className = 'bg-white rounded-xl p-4 shadow border hover:shadow-md transition-shadow';
+                    el.innerHTML = `<div class="flex justify-between items-start"><div><h4 class="trip-title font-bold text-gray-900">${esc(trip.title)}</h4><p class="trip-desc text-sm text-gray-500 mt-1">${esc(trip.description||'')}</p></div><button class="del-btn text-gray-400 hover:text-red-500"><i data-lucide="trash-2" style="width:16px;height:16px"></i></button></div><p class="text-xs text-gray-400 mt-3">${new Date(trip.created_at).toLocaleDateString('id-ID')}</p>`;
+                    el.querySelector('.del-btn').addEventListener('click', () => deleteRecord(trip));
+                    list.appendChild(el); lucide.createIcons();
+                }
+            });
+            existing.forEach(el => el.remove());
+        }
+
+        function renderVotes() {
+            const list = document.getElementById('votes-list');
+            const empty = document.getElementById('votes-empty');
+            const votes = getByType('vote');
+            empty.classList.toggle('hidden', votes.length > 0);
+            const existing = new Map([...list.children].map(el => [el.dataset.id, el]));
+            votes.sort((a,b) => (b.votes||0) - (a.votes||0));
+            votes.forEach(item => {
+                if (existing.has(item.__backendId)) {
+                    const el = existing.get(item.__backendId);
+                    el.querySelector('.vote-count').textContent = item.votes || 0;
+                    el.querySelector('.vote-title').textContent = item.title;
+                    existing.delete(item.__backendId);
+                } else {
+                    const el = document.createElement('div');
+                    el.dataset.id = item.__backendId;
+                    el.className = 'bg-white rounded-xl p-4 shadow border flex items-center gap-4';
+                    el.innerHTML = `<div class="flex flex-col items-center gap-1"><button class="vote-up w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center hover:bg-emerald-200"><i data-lucide="chevron-up" style="width:16px;height:16px"></i></button><span class="vote-count font-bold text-lg">${item.votes||0}</span><button class="vote-down w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200"><i data-lucide="chevron-down" style="width:16px;height:16px"></i></button></div><div class="flex-1"><h4 class="vote-title font-bold text-gray-900">${esc(item.title)}</h4><p class="text-sm text-gray-500">${esc(item.description||'')}</p></div><button class="del-btn text-gray-400 hover:text-red-500"><i data-lucide="trash-2" style="width:16px;height:16px"></i></button>`;
+                    el.querySelector('.vote-up').addEventListener('click', () => window.dataSdk.update({...item, votes:(item.votes||0)+1}));
+                    el.querySelector('.vote-down').addEventListener('click', () => window.dataSdk.update({...item, votes:Math.max(0,(item.votes||0)-1)}));
+                    el.querySelector('.del-btn').addEventListener('click', () => deleteRecord(item));
+                    list.appendChild(el); lucide.createIcons();
+                }
+            });
+            existing.forEach(el => el.remove());
+            drawPieChart();
+        }
+
+        function renderExpenses() {
+            const list = document.getElementById('expenses-list');
+            const empty = document.getElementById('expenses-empty');
+            const summary = document.getElementById('budget-summary');
+            const expenses = getByType('expense');
+            empty.classList.toggle('hidden', expenses.length > 0);
+            summary.classList.toggle('hidden', expenses.length === 0);
+            const existing = new Map([...list.children].map(el => [el.dataset.id, el]));
+            expenses.forEach(exp => {
+                if (existing.has(exp.__backendId)) { existing.delete(exp.__backendId); }
+                else {
+                    const el = document.createElement('div');
+                    el.dataset.id = exp.__backendId;
+                    el.className = 'bg-white rounded-xl p-4 shadow border flex items-center justify-between';
+                    el.innerHTML = `<div><h4 class="font-bold text-gray-900">${esc(exp.title)}</h4><p class="text-sm text-gray-500">Paid by <span class="font-medium">${esc(exp.paid_by)}</span> · Split with ${esc(exp.split_with)}</p></div><div class="flex items-center gap-3"><span class="font-bold text-amber-700">Rp${Number(exp.amount||0).toLocaleString('id-ID')}</span><button class="del-btn text-gray-400 hover:text-red-500"><i data-lucide="trash-2" style="width:16px;height:16px"></i></button></div>`;
+                    el.querySelector('.del-btn').addEventListener('click', () => deleteRecord(exp));
+                    list.appendChild(el); lucide.createIcons();
+                }
+            });
+            existing.forEach(el => el.remove());
+            if (expenses.length > 0) {
+                const balances = {};
+                expenses.forEach(exp => {
+                    const people = exp.split_with.split(',').map(s=>s.trim()).filter(Boolean);
+                    const share = (exp.amount||0)/people.length;
+                    people.forEach(p => {
+                        if(!balances[p]) balances[p]=0;
+                        if(p===exp.paid_by) balances[p]+=(exp.amount||0)-share;
+                        else balances[p]-=share;
+                    });
+                    if(!people.includes(exp.paid_by)){if(!balances[exp.paid_by])balances[exp.paid_by]=0;balances[exp.paid_by]+=(exp.amount||0);}
+                });
+                document.getElementById('summary-content').innerHTML = Object.entries(balances).map(([name,bal])=>{
+                    if(bal>0) return `<p><span class="font-medium">${esc(name)}</span> is owed <span class="text-emerald-700 font-bold">Rp${Math.round(bal).toLocaleString('id-ID')}</span></p>`;
+                    if(bal<0) return `<p><span class="font-medium">${esc(name)}</span> owes <span class="text-red-600 font-bold">Rp${Math.round(Math.abs(bal)).toLocaleString('id-ID')}</span></p>`;
+                    return `<p><span class="font-medium">${esc(name)}</span> is settled ✓</p>`;
+                }).join('');
+            }
+        }
+
+        async function deleteRecord(record) {
+            const r = await window.dataSdk.delete(record);
+            if(!r.isOk) showToast('Failed to delete');
+        }
+        function esc(str){const d=document.createElement('div');d.textContent=str;return d.innerHTML;}
+        function showToast(msg){const t=document.createElement('div');t.className='fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm shadow-lg z-50';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000);}
+
+        // Forms
+        document.getElementById('add-trip-btn').addEventListener('click',()=>document.getElementById('trip-form').classList.remove('hidden'));
+        document.getElementById('cancel-trip').addEventListener('click',()=>document.getElementById('trip-form').classList.add('hidden'));
+        document.getElementById('save-trip').addEventListener('click', async()=>{
+            const title=document.getElementById('trip-name').value.trim();if(!title)return;
+            if(allData.length>=999){showToast('Limit reached (999 items)');return;}
+            document.getElementById('save-trip').disabled=true;
+            const r=await window.dataSdk.create({type:'trip',title,description:document.getElementById('trip-desc').value.trim(),amount:0,paid_by:'',split_with:'',votes:0,status:'active',created_at:new Date().toISOString(),category:''});
+            document.getElementById('save-trip').disabled=false;
+            if(r.isOk){document.getElementById('trip-name').value='';document.getElementById('trip-desc').value='';document.getElementById('trip-form').classList.add('hidden');}else showToast('Failed to save');
+        });
+
+        document.getElementById('add-vote-btn').addEventListener('click',()=>document.getElementById('vote-form').classList.remove('hidden'));
+        document.getElementById('cancel-vote').addEventListener('click',()=>document.getElementById('vote-form').classList.add('hidden'));
+        document.getElementById('save-vote').addEventListener('click', async()=>{
+            const title=document.getElementById('vote-title').value.trim();if(!title)return;
+            if(allData.length>=999){showToast('Limit reached (999 items)');return;}
+            document.getElementById('save-vote').disabled=true;
+            const r=await window.dataSdk.create({type:'vote',title,description:document.getElementById('vote-desc').value.trim(),amount:0,paid_by:'',split_with:'',votes:0,status:'active',created_at:new Date().toISOString(),category:''});
+            document.getElementById('save-vote').disabled=false;
+            if(r.isOk){document.getElementById('vote-title').value='';document.getElementById('vote-desc').value='';document.getElementById('vote-form').classList.add('hidden');}else showToast('Failed to save');
+        });
+
+        document.getElementById('add-expense-btn').addEventListener('click',()=>document.getElementById('expense-form').classList.remove('hidden'));
+        document.getElementById('cancel-expense').addEventListener('click',()=>document.getElementById('expense-form').classList.add('hidden'));
+        document.getElementById('save-expense').addEventListener('click', async()=>{
+            const title=document.getElementById('exp-title').value.trim();
+            const amount=parseFloat(document.getElementById('exp-amount').value)||0;
+            const paid_by=document.getElementById('exp-paid').value.trim();
+            const split_with=document.getElementById('exp-split').value.trim();
+            if(!title||!amount||!paid_by||!split_with)return;
+            if(allData.length>=999){showToast('Limit reached (999 items)');return;}
+            document.getElementById('save-expense').disabled=true;
+            const r=await window.dataSdk.create({type:'expense',title,description:'',amount,paid_by,split_with,votes:0,status:'active',created_at:new Date().toISOString(),category:''});
+            document.getElementById('save-expense').disabled=false;
+            if(r.isOk){document.getElementById('exp-title').value='';document.getElementById('exp-amount').value='';document.getElementById('exp-paid').value='';document.getElementById('exp-split').value='';document.getElementById('expense-form').classList.add('hidden');}else showToast('Failed to save');
+        });
+
+        (async()=>{
+            const r=await window.dataSdk.init({
+                onDataChanged(data){
+                    allData=data;
+                    renderTrips();renderVotes();renderExpenses();
+                }
+            });
+            if(!r.isOk) showToast('Failed to connect to data');
+        })();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9feb7638f41b6cf4',t:'MTc3OTI4MTM3MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body></html>
