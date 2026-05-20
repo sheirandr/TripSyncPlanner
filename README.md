@@ -1,6 +1,5 @@
 # TripSyncPlanner
 End the group chat indecision. Let everyone have a say with interactive voting polls and visual results.
-<!doctype html>
 <html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
