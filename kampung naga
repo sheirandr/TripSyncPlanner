@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kampung Naga</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <!-- Lucide Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700;800&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root { --vh: 1vh; }
+    body { font-family: 'Alegreya Sans', sans-serif; }
+    h1, h2, h3, h4 { font-family: 'Alegreya', serif; }
+    .hero-overlay { background: linear-gradient(to bottom, rgba(15,23,42,0.6) 0%, rgba(15,23,42,0.3) 50%, rgba(15,23,42,0.8) 100%); }
+    .capacity-pulse { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .card-hover { transition: transform 0.3s, box-shadow 0.3s; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
+    .fade-in { animation: fadeIn 0.6s ease-out forwards; opacity: 0; }
+    @keyframes fadeIn { to { opacity: 1; } }
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+  </style>
+</head>
+<body class="w-full min-h-screen bg-stone-50 text-stone-800">
+
+  <!-- NAVIGATION -->
+  <nav class="fixed top-0 w-full z-50 bg-stone-900/95 backdrop-blur-sm border-b border-stone-700">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
+      <a href="#beranda" class="text-lg font-bold text-emerald-400 tracking-wide">Kampung Naga</a>
+      <div class="hidden md:flex gap-6 text-sm">
+        <a href="#beranda" class="text-stone-300 hover:text-emerald-400 transition">Beranda</a>
+        <a href="#virtual" class="text-stone-300 hover:text-emerald-400 transition">Naga Virtual</a>
+        <a href="#booking" class="text-stone-300 hover:text-emerald-400 transition">Pesan Kunjungan</a>
+        <a href="#panduan" class="text-stone-300 hover:text-emerald-400 transition">Panduan Adat</a>
+        <a href="#kriya" class="text-stone-300 hover:text-emerald-400 transition">Kriya Naga</a>
+      </div>
+      <button id="mobile-menu-btn" class="md:hidden text-stone-300 focus:outline-none">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+    <!-- Mobile Menu Container -->
+    <div id="mobile-menu" class="hidden md:hidden bg-stone-900 border-t border-stone-800 px-4 py-3 space-y-2 animate-fadeIn">
+      <a href="#beranda" class="block text-stone-300 hover:text-emerald-400 py-1 transition">Beranda</a>
+      <a href="#virtual" class="block text-stone-300 hover:text-emerald-400 py-1 transition">Naga Virtual</a>
+      <a href="#booking" class="block text-stone-300 hover:text-emerald-400 py-1 transition">Pesan Kunjungan</a>
+      <a href="#panduan" class="block text-stone-300 hover:text-emerald-400 py-1 transition">Panduan Adat</a>
+      <a href="#kriya" class="block text-stone-300 hover:text-emerald-400 py-1 transition">Kriya Naga</a>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section id="beranda" class="relative w-full min-h-screen flex flex-col justify-center items-center">
+    <img class="absolute inset-0 w-full h-full object-cover" loading="lazy" src="https://images.pexels.com/photos/1547429/pexels-photo-1547429.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="Pemandangan sawah dan pedesaan tradisional Sunda">
+    <div class="hero-overlay absolute inset-0"></div>
+    
+    <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 max-w-4xl mt-12">
+      <h1 class="text-white text-5xl md:text-7xl font-extrabold drop-shadow-lg fade-in">Kampung Naga</h1>
+      <p class="text-stone-200 text-lg md:text-xl mt-4 max-w-2xl优化 fade-in stagger-1">
+        Jelajahi warisan budaya Sunda yang autentik — 444 anak tangga menuju peradaban yang menjaga tradisi leluhur sejak ratusan tahun silam.
+      </p>
+
+      <!-- Capacity Monitor UI Component -->
+      <div class="mt-8 bg-stone-900/80 backdrop-blur border border-stone-700/50 rounded-2xl p-6 max-w-md w-full fade-in stagger-2 shadow-2xl">
+        <p class="text-stone-400 text-xs uppercase tracking-wider mb-2 font-semibold">Sistem Kendali Daya Tampung (Live)</p>
+        <div class="flex items-center justify-center gap-4">
+          <span id="traffic-light" class="w-4 h-4 rounded-full bg-green-500 capacity-pulse"></span>
+          <span id="visitor-count" class="text-4xl font-bold text-white tracking-tight">284</span>
+          <span class="text-stone-500 text-xl">/ 500</span>
+        </div>
+        <p id="capacity-status" class="text-emerald-400 text-sm mt-2 font-medium">Kondisi Aman: Sisa kuota masuk fisik hari ini tersedia.</p>
+      </div>
+
+      <a href="#booking" class="mt-8 inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-full transition duration-300 shadow-lg shadow-emerald-900/40 fade-in stagger-3">
+        Reservasi Kunjungan Langsung
+      </a>
+    </div>
+  </section>
+
+  <!-- NAGA VIRTUAL SECTION -->
+  <section id="virtual" class="w-full py-20 px-4">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-stone-800 text-center mb-4">Naga Virtual (Wisata Inklusif)</h2>
+      <p class="text-stone-600 text-center max-w-2xl mx-auto mb-12 text-base md:text-lg">
+        Gerbang digital ramah aksesibilitas. Didesain khusus agar para lansia, anak-anak, dan penyandang disabilitas dapat menikmati keunikan adat tanpa hambatan medan fisik.
+      </p>
+
+      <!-- Virtual Tour Previews -->
+      <div class="grid md:grid-cols-2 gap-8 mb-16">
+        <div class="rounded-2xl overflow-hidden shadow-md bg-white card-hover border border-stone-200">
+          <div class="relative group cursor-pointer" onclick="alert('Membuka Fitur Simulasi Kamera Virtual 360° Anak Tangga...')">
+            <img class="w-full h-64 object-cover" loading="lazy" src="https://images.pexels.com/photos/21952599/pexels-photo-21952599.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Anak tangga kayu di area hijau rindang">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition duration-300">
+              <span class="bg-white/90 text-stone-900 px-4 py-2 rounded-full font-bold text-sm flex items-center gap-2">
+                <i data-lucide="eye" class="w-4 h-4"></i> Mulai Tur 360°
+              </span>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-stone-900 mb-2">Simulasi 444 Anak Tangga</h3>
+            <p class="text-stone-600">Rasakan sensasi panorama visual menuruni lembah sungai Ci Wulan menuju gerbang desa adat secara imersif dan interaktif.</p>
+          </div>
+        </div>
+
+        <div class="rounded-2xl overflow-hidden shadow-md bg-white card-hover border border-stone-200">
+          <div class="relative group cursor-pointer" onclick="alert('Membuka Fitur Kamera Interaktif Interior Sanubari Adat...')">
+            <img class="w-full h-64 object-cover" loading="lazy" src="https://images.pexels.com/photos/8178023/pexels-photo-8178023.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Bangunan rumah panggung bambu tradisional">
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition duration-300">
+              <span class="bg-white/90 text-stone-900 px-4 py-2 rounded-full font-bold text-sm flex items-center gap-2">
+                <i data-lucide="eye" class="w-4 h-4"></i> Lihat Arsitektur
+              </span>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-stone-900 mb-2">Arsitektur Rumah Sanubari</h3>
+            <p class="text-stone-600">Pelajari detail arsitektur rumah panggung anyaman bambu beratap ijuk yang dirancang seragam dan tanpa paku bangunan.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audio Book Player Component -->
+      <h3 class="text-2xl font-bold text-stone-800 text-center mb-8">Audio Book — Rekaman Narasi Kebudayaan</h3>
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Audio Card 1 -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-200 card-hover">
+          <div class="flex items-center gap-4 mb-4">
+            <button class="audio-btn w-12 h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-md transition duration-200" data-audio="audio1">
+              <i data-lucide="play" class="w-5 h-5 ml-0.5 btn-icon"></i>
+            </button>
+            <h4 class="font-bold text-stone-900 text-lg">Upacara Hajat Sasih</h4>
+          </div>
+          <p class="text-stone-600 text-sm leading-relaxed">
+            Eksplorasi audio mengenai ritus rutin pembersihan makam leluhur dan ungkapan rasa syukur kolektif masyarakat adat Naga.
+          </p>
+        </div>
+
+        <!-- Audio Card 2 -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-200 card-hover">
+          <div class="flex items-center gap-4 mb-4">
+            <button class="audio-btn w-12 h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-md transition duration-200" data-audio="audio2">
+              <i data-lucide="play" class="w-5 h-5 ml-0.5 btn-icon"></i>
+            </button>
+            <h4 class="font-bold text-stone-900 text-lg">Kedaulatan Agraris</h4>
+          </div>
+          <p class="text-stone-600 text-sm leading-relaxed">
+            Kisah harian pola hidup mandiri: cara bercocok tanam organik terintegrasi, menumbuk padi manual, dan kerajinan anyam.
+          </p>
+        </div>
+
+        <!-- Audio Card 3 -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-200 card-hover">
+          <div class="flex items-center gap-4 mb-4">
+            <button class="audio-btn w-12 h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shadow-md transition duration-200" data-audio="audio3">
+              <i data-lucide="play" class="w-5 h-5 ml-0.5 btn-icon"></i>
+            </button>
+            <h4 class="font-bold text-stone-900 text-lg">Kaulinan Lembur</h4>
+          </div>
+          <p class="text-stone-600 text-sm leading-relaxed">
+            Kumpulan rekaman suara keceriaan permainan egrang, congklak, dan kolecer bambu yang lestari melintasi generasi.
+          </p>
+        </div>
+      </div>
+
+      <!-- Ambient Soundscape Player Section -->
+      <div class="mt-12 grid md:grid-cols-2 gap-6">
+        <div class="relative rounded-2xl overflow-hidden h-48 group cursor-pointer shadow" onclick="alert('Memutar Efek Suara Ambient Sungai Ci Wulan...')">
+          <img class="w-full h-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" src="https://images.pexels.com/photos/1005472/pexels-photo-1005472.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Aliran sungai jernih di dekat hutan">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-black/20 to-transparent flex items-end p-6">
+            <p class="text-white font-medium flex items-center gap-2"><i data-lucide="volume-2" class="w-5 h-5 text-emerald-400"></i> Soundscape: Gemercik Air Sungai Ci Wulan</p>
+          </div>
+        </div>
+        <div class="relative rounded-2xl overflow-hidden h-48 group cursor-pointer shadow" onclick="alert('Memutar Efek Suara Angin dan Serangga Sawah...')">
+          <img class="w-full h-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" src="https://images.pexels.com/photos/13013188/pexels-photo-13013188.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Sawah hijau nan asri">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-black/20 to-transparent flex items-end p-6">
+            <p class="text-white font-medium flex items-center gap-2"><i data-lucide="volume-2" class="w-5 h-5 text-emerald-400"></i> Soundscape: Desau Angin & Harpa Sawah</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING SECTION -->
+  <section id="booking" class="w-full py-20 px-4 bg-stone-100 border-y border-stone-200">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-stone-800 text-center mb-4">Pesan Kunjungan & Homestay (OTA)</h2>
+      <p class="text-stone-600 text-center max-w-2xl mx-auto mb-12">
+        Sistem manajemen kunjungan terpadu. Seluruh kontribusi biaya penginapan dan pemandu lokal dialokasikan 100% langsung untuk kemaslahatan warga.
+      </p>
+
+      <!-- Homestay List Grid -->
+      <h3 class="text-2xl font-bold text-stone-800 mb-6 flex items-center gap-2"><i data-lucide="home" class="w-6 h-6 text-emerald-600"></i> Homestay Warga Asli</h3>
+      <div class="grid md:grid-cols-3 gap-6 mb-12">
+        <div class="rounded-xl overflow-hidden shadow-sm bg-white card-hover border border-stone-200">
+          <img class="w-full h-48 object-cover" loading="lazy" src="https://images.pexels.com/photos/2058752/pexels-photo-2058752.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Kamar interior kayu hangat">
+          <div class="p-5">
+            <h4 class="font-bold text-stone-900 text-lg">Saung Hejo</h4>
+            <p class="text-emerald-700 font-bold mt-1 text-base">Rp 150.000 / malam</p>
+            <p class="text-stone-600 text-sm mt-2">Gubuk panggung bambu estetik di bibir terasering sawah. Ideal untuk 2-3 orang.</p>
+          </div>
+        </div>
+
+        <div class="rounded-xl overflow-hidden shadow-sm bg-white card-hover border border-stone-200">
+          <img class="w-full h-48 object-cover" loading="lazy" src="https://images.pexels.com/photos/271649/pexels-photo-271649.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Ruangan minimalis beralas anyaman mat">
+          <div class="p-5">
+            <h4 class="font-bold text-stone-900 text-lg">Imah Bambu</h4>
+            <p class="text-emerald-700 font-bold mt-1 text-base">Rp 200.000 / malam</p>
+            <p class="text-stone-600 text-sm mt-2">Struktur panggung tradisional dengan ruang tengah lapang, pas untuk liburan keluarga kecil.</p>
+          </div>
+        </div>
+
+        <div class="rounded-xl overflow-hidden shadow-sm bg-white card-hover border border-stone-200">
+          <img class="w-full h-48 object-cover" loading="lazy" src="https://images.pexels.com/photos/12326545/pexels-photo-12326545.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Jendela kayu sederhana menghadap pepohonan">
+          <div class="p-5">
+            <h4 class="font-bold text-stone-900 text-lg">Pondok Adat</h4>
+            <p class="text-emerald-700 font-bold mt-1 text-base">Rp 175.000 / malam</p>
+            <p class="text-stone-600 text-sm mt-2">Merasakan ritme otentik bermukim seraya berinteraksi hangat dengan keseharian empunya rumah.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Local Guides Guide Grid -->
+      <h3 class="text-2xl font-bold text-stone-800 mb-6 flex items-center gap-2"><i data-lucide="users" class="w-6 h-6 text-emerald-600"></i> Pemandu Lokal</h3>
+      <div class="grid md:grid-cols-2 gap-6 mb-12">
+        <div class="flex gap-4 bg-white rounded-xl p-5 shadow-sm border border-stone-200 card-hover">
+          <img class="w-16 h-16 rounded-full object-cover ring-2 ring-emerald-500/20" loading="lazy" src="https://images.pexels.com/photos/36732027/pexels-photo-36732027.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Wajah kakek bijak berpakaian adat">
+          <div>
+            <h4 class="font-bold text-stone-900">Abah Eman</h4>
+            <p class="text-stone-600 text-sm mt-1">Tetua adat karismatik dengan wawasan mendalam kisah historiografi tutur Kampung Naga selama lebih dari 40 tahun.</p>
+          </div>
+        </div>
+        <div class="flex gap-4 bg-white rounded-xl p-5 shadow-sm border border-stone-200 card-hover">
+          <img class="w-16 h-16 rounded-full object-cover ring-2 ring-emerald-500/20" loading="lazy" src="https://images.pexels.com/photos/17403554/pexels-photo-17403554.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Pemuda tani ramah tersenyum">
+          <div>
+            <h4 class="font-bold text-stone-900">Kang Asep</h4>
+            <p class="text-stone-600 text-sm mt-1">Pemandu muda enerjik bilingual (Sunda-Indonesia), pakar pendamping rute agrowisata dan lokakarya kerajinan.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Form Component -->
+      <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl p-8 border border-stone-200/60">
+        <h3 class="text-xl font-bold text-stone-900 mb-6 text-center">Formulir Reservasi Digital</h3>
+        <form id="booking-form" class="space-y-4">
+          <div>
+            <label for="visitor-name" class="text-sm font-medium text-stone-700 block mb-1">Nama Lengkap</label>
+            <input id="visitor-name" type="text" required class="w-full border border-stone-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition" placeholder="Masukkan nama Anda">
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="visitor-email" class="text-sm font-medium text-stone-700 block mb-1">Email</label>
+              <input id="visitor-email" type="email" required class="w-full border border-stone-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition" placeholder="email@contoh.com">
+            </div>
+            <div>
+              <label for="visitor-phone" class="text-sm font-medium text-stone-700 block mb-1">Nomor Telepon</label>
+              <input id="visitor-phone" type="tel" required class="w-full border border-stone-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition" placeholder="08xxxxxxxxxx">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="visit-date" class="text-sm font-medium text-stone-700 block mb-1">Tanggal Kunjungan</label>
+              <input id="visit-date" type="date" required class="w-full border border-stone-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-stone-600 outline-none transition">
+            </div>
+            <div>
+              <label for="num-visitors" class="text-sm font-medium text-stone-700 block mb-1">Jumlah Pengunjung</label>
+              <input id="num-visitors" type="number" min="1" max="20" value="1" required class="w-full border border-stone-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition">
+            </div>
+          </div>
+          <div>
+            <label for="homestay-select" class="text-sm font-medium text-stone-700 block mb-1">Pilih Homestay (Opsional)</label>
+            <select id="homestay-select" class="w-full border border-stone-300 bg-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 text-stone-600 outline-none transition">
+              <option value="">Tidak perlu menginap</option>
+              <option value="homestay-1">Saung Hejo - Rp 150.000/malam</option>
+              <option value="homestay-2">Imah Bambu - Rp 200.000/malam</option>
+              <option value="homestay-3">Pondok Adat - Rp 175.000/malam</option>
+            </select>
+          </div>
+          <div>
+            <label for="guide-select" class="text-sm font-medium text-stone-700 block mb-1">Pilih Pemandu (Opsional)</label>
+            <select id="guide-select" class="w-full border border-stone-300 bg-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 text-stone-600 outline-none transition">
+              <option value="">Tanpa pemandu lokal</option>
+              <option value="guide-1">Abah Eman (Sesepuh Adat)</option>
+              <option value="guide-2">Kang Asep (Pemandu Muda)</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg transition duration-200 mt-2 shadow-md">
+            Kirim Formulir Reservasi
+          </button>
+        </form>
+
+        <!-- Status Form Handlers -->
+        <div id="form-loading" class="hidden text-center py-4">
+          <div class="inline-block w-6 h-6 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
+          <p class="text-sm text-stone-500 mt-2">Memproses kuota & mencatat jadwal...</p>
+        </div>
+        <div id="form-success" class="hidden text-center py-6">
+          <i data-lucide="check-circle" class="w-12 h-12 text-emerald-600 mx-auto mb-3"></i>
+          <p class="text-emerald-700 font-bold text-lg">Reservasi Berhasil Diajukan!</p>
+          <p class="text-stone-600 text-sm mt-1">Kode booking dan detail akomodasi telah dikirim ke email & WhatsApp Anda.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANDUAN ADAT SECTION -->
+  <section id="panduan" class="w-full py-20 px-4 bg-stone-50">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-stone-800 text-center mb-4">Etika & Panduan Adat</h2>
+      <p class="text-stone-600 text-center max-w-2xl mx-auto mb-12">
+        Teknologi hadir untuk melindungi keaslian adat, bukan mengikisnya. Mohon patuhi aturan fundamental berikut saat melakukan kunjungan fisik.
+      </p>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-xl font-bold text-emerald-700 mb-4 flex items-center gap-2"><i data-lucide="check-square" class="w-5 h-5"></i> Yang Harus Dilakukan (Do's)</h3>
+          <ul class="space-y-3 text-sm md:text-base">
+            <li class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-stone-700 flex items-start gap-2">
+              <span class="text-emerald-600 font-bold">✓</span> Berpakaian sopan, tertutup rapi, dan berperilaku santun selama di kawasan pemukiman.
+            </li>
+            <li class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-stone-700 flex items-start gap-2">
+              <span class="text-emerald-600 font-bold">✓</span> Wajib meminta izin terlebih dahulu kepada pemandu sebelum mendokumentasikan warga.
+            </li>
+            <li class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 text-stone-700 flex items-start gap-2">
+              <span class="text-emerald-600 font-bold">✓</span> Menjaga keasrian, ketenangan alam, dan membawa kembali sampah pribadi ke luar desa.
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-red-600 mb-4 flex items-center gap-2"><i data-lucide="x-square" class="w-5 h-5"></i> Yang Dilarang (Don'ts)</h3>
+          <ul class="space-y-3 text-sm md:text-base">
+            <li class="bg-red-50 border border-red-200 rounded-lg p-4 text-stone-700 flex items-start gap-2">
+              <span class="text-red-600 font-bold">✗</span> Dilarang keras mengambil gambar, video, atau masuk tanpa izin ke area sakral Bumi Ageung.
+            </li>
+            <li class="bg-red-50 border border-red-200 rounded-lg p-4 text-stone-700 flex items-start gap-2">
+              <span class="text-red-600 font-bold">✗</span> Menyalakan alat elektronik bersuara bising atau membawa gawai modern berlebihan ke zona inti.
+            </li>
+            <li class="bg-red-50 border border-red-200 rounded-lg p-4 text-stone-700 flex items-start gap-2">
+              <span class="text-red-600 font-bold">✗</span> Menerbangkan perangkat drone atau sejenisnya di atas langit cakrawala teritorial adat.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KRIYA NAGA SECTION -->
+  <section id="kriya" class="w-full py-20 px-4 bg-stone-100">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-stone-800 text-center mb-4">Kriya Naga (E-Commerce Lokal)</h2>
+      <p class="text-stone-600 text-center max-w-2xl mx-auto mb-12">
+        Bantu tingkatkan taraf ekonomi mandiri pengrajin lokal dengan membeli cinderamata asli yang diproduksi tanpa mesin modern.
+      </p>
+      
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Craft 1 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-stone-200 card-hover flex flex-col justify-between">
+          <img class="w-full h-56 object-cover" loading="lazy" src="https://images.pexels.com/photos/35201483/pexels-photo-35201483.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Ibu-ibu menganyam bambu">
+          <div class="p-5 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="font-bold text-stone-900 text-lg">Anyaman Bambu Otentik</h4>
+              <p class="text-emerald-700 font-medium mt-1">Mulai Rp 50.000</p>
+              <p class="text-stone-600 text-sm mt-2">Tas anyam, boboko nasi, dan wadah serbaguna yang dianyam presisi dengan tangan terampil.</p>
+            </div>
+            <button class="w-full border border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white text-sm font-bold py-2 rounded-lg transition duration-200 mt-4" onclick="alert('Item anyaman dimasukkan ke keranjang belanja!')">Beli Produk</button>
+          </div>
+        </div>
+
+        <!-- Craft 2 -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-stone-200 card-hover flex flex-col justify-between">
+          <img class="w-full h-56 object-cover" loading="lazy" src="https://images.pexels.com/photos/28528651/pexels-photo-28528651.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Topeng ukiran kayu buatan tangan">
+          <div class="p-5 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="font-bold text-stone-900 text-lg">Ukiran Kayu & Aksesoris</h4>
+              <p class="text-emerald-700 font-medium mt-1">Mulai Rp 75.000</p>
+              <p class="text-stone-600 text-sm mt-2">Pernak-pernik hiasan dinding, sendok kayu, dan miniatur ciamik berbahan kayu lokal pilihan.</p>
+            </div>
+            <button class="w-full border border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white text-sm font-bold py-2 rounded-lg transition duration-200 mt-4" onclick="alert('Item ukiran dimasukkan ke keranjang belanja!')">Beli Produk</button>
+          </div>
+        </div>
+
+        <!-- Craft 3 (Bagian yang Terpotong Sebelumnya) -->
+        <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-stone-200 card-hover flex flex-col justify-between">
+          <img class="w-full h-56 object-cover" loading="lazy" src="https://images.pexels.com/photos/34411082/pexels-photo-34411082.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Kain tenun ikat tradisional">
+          <div class="p-5 flex-grow flex flex-col justify-between">
+            <div>
+              <h4 class="font-bold text-stone-900 text-lg">Tenun Ikat Tradisional</h4>
+              <p class="text-emerald-700 font-medium mt-1">Mulai Rp 120.000</p>
+              <p class="text-stone-600 text-sm mt-2">Kain tenun berpola khas Sunda lama yang ditenun helai demi helai menggunakan ATBM (Alat Tenun Bukan Mesin).</p>
+            </div>
+            <button class="w-full border border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white text-sm font-bold py-2 rounded-lg transition duration-200 mt-4" onclick="alert('Item kain tenun dimasukkan ke keranjang belanja!')">Beli Produk</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="w-full bg-stone-900 border-t border-stone-800 py-8 px-4 text-center">
+    <p class="text-stone-400 text-sm">&copy; 2026 Proyek Platform Pariwisata Berkelanjutan - Kampung Naga Digital.</p>
+    <p class="text-stone-600 text-xs mt-2">Inovasi Bisnis Digital Inklusif, Mendukung Pelestarian Adat, dan Aksesibilitas Disabilitas.</p>
+  </footer>
+
+  <!-- FUNCTIONAL JAVASCRIPT LAYER -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // 1. Mobile Menu Toggle Logic
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // 2. Audio Book Simulation Engine (Play / Pause Button Toggle)
+    const audioButtons = document.querySelectorAll('.audio-btn');
+    audioButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const icon = this.querySelector('.btn-icon');
+        const isPlaying = icon.getAttribute('data-lucide') === 'square';
+        
+        // Reset all buttons first to simulate single-stream playback
+        audioButtons.forEach(b => {
+          const bIcon = b.querySelector('.btn-icon');
+          bIcon.setAttribute('data-lucide', 'play');
+          b.classList.remove('bg-red-600', 'hover:bg-red-700');
+          b.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+        });
+
+        if (!isPlaying) {
+          // Toggle to stop state
+          icon.setAttribute('data-lucide', 'square');
+          this.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+          this.classList.add('bg-red-600', 'hover:bg-red-700');
+          alert('Memutar rekaman audio materi narasi digital...');
+        } else {
+          alert('Audio dihentikan.');
+        }
+        lucide.createIcons(); // Refresh icons inside modified buttons
+      });
+    });
+
+    // 3. Dynamic Booking Form Submission Mockup
+    const form = document.getElementById('booking-form');
+    const loadingState = document.getElementById('form-loading');
+    const successState = document.getElementById('form-success');
+    const visitorCountDisplay = document.getElementById('visitor-count');
+    const trafficLight = document.getElementById('traffic-light');
+    const capacityStatus = document.getElementById('capacity-status');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const numVisitorsInput = parseInt(document.getElementById('num-visitors').value);
+      const currentCount = parseInt(visitorCountDisplay.innerText);
+      const targetCount = currentCount + numVisitorsInput;
+
+      // Rule Validation Check: Carrying Capacity Boundary Limit 500
+      if (targetCount > 500) {
+        alert('Maaf, kuota kunjungan untuk tanggal yang dipilih sudah melampaui batas carrying capacity harian (Maksimal 500 orang). Silakan kurangi jumlah personil kelompok atau pilih tanggal lain.');
+        return;
+      }
+
+      form.classList.add('hidden');
+      loadingState.classList.remove('hidden');
+
+      // Simulate API Network Delay Processing
+      setTimeout(() => {
+        loadingState.classList.add('hidden');
+        successState.classList.remove('hidden');
+        
+        // Dynamically update the Carrying Capacity Visitor Monitor dashboard in real-time
+        visitorCountDisplay.innerText = targetCount;
+
+        // Dynamic State adjustments if approaches dangerous carrying bounds
+        if (targetCount >= 400 && targetCount <= 500) {
+          trafficLight.className = "w-4 h-4 rounded-full bg-yellow-500 capacity-pulse";
+          capacityStatus.innerText = "Status Waspada: Kuota padat, mendekati batas maksimal daya tampung.";
+          capacityStatus.className = "text-yellow-500 text-sm mt-2 font-medium";
+        } else if (targetCount >= 500) {
+          trafficLight.className = "w-4 h-4 rounded-full bg-red-500";
+          capacityStatus.innerText = "Status Kritis: Batas daya tampung terpenuhi. Gerbang ditutup.";
+          capacityStatus.className = "text-red-500 text-sm mt-2 font-medium";
+        }
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
